@@ -11,25 +11,41 @@ provider "azurerm" {
   features {}
 }
 
-# The following example shows how to generate a random priority
-# between 1 and 50000 for a aws_alb_listener_rule resource:
-
-resource "random_integer" "priority" {
-  min = 1
-  max = 50000
-  keepers = {
-    # Generate a new integer each time we switch to a new listener ARN
-    listener_arn = var.listener_arn
-  }
+resource "random_integer" "random_id" {
+  min = 1000
+  max = 9999
 }
 
-resource "aws_alb_listener_rule" "main" {
-  listener_arn = random_integer.priority.keepers.listener_arn
-  priority     = random_integer.priority.result
 
-  action {
-    type             = "forward"
-    target_group_arn = var.target_group_arn
+resource "azurerm_resource_group" "rg" {
+  name     = "rg-alicia-kyllian-${random_integer.random_id.result}"
+  location = "France Central"  # Région France Central
+}
+
+
+resource "azurerm_app_service_plan" "asp" {
+  name                = "asp-alicia-kyllian-${random_integer.random_id.result}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  kind                = "Linux"
+
+  sku {
+    tier = "Basic"
+    size = "B1"
   }
-  # ... (other aws_alb_listener_rule arguments) ...
+
+  reserved = true
+}
+
+
+resource "azurerm_app_service" "webapp" {
+  name                = "webapp-alicia-kyllian-${random_integer.random_id.result}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  app_service_plan_id = azurerm_app_service_plan.asp.id
+
+  site_config {
+    java_version    = "1.7"
+    java_container  = "TOMCAT"
+  }
 }
