@@ -14,13 +14,13 @@ provider "azurerm" {
 
 # Déclaration du groupe de ressources Azure
 resource "azurerm_resource_group" "example" {
-  name     = "rg-votre_nom-{remplacez_par_votre_nom}-${random_integer.example.result}"
+  name     = "rg-Kyllian-alicia-{Kyllian-alicia}-${random_integer.example.result}"
   location = "West Europe"
 }
 
 # Déclaration du plan App Service
 resource "azurerm_app_service_plan" "example" {
-  name                = "asp-votre_nom-{remplacez_par_votre_nom}-${random_integer.example.result}"
+  name                = "asp-Kyllian-alicia-{Kyllian-alicia}-${random_integer.example.result}"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
   kind                = "Linux"
@@ -32,7 +32,7 @@ resource "azurerm_app_service_plan" "example" {
 
 # Déclaration de l'application web
 resource "azurerm_app_service" "example" {
-  name                = "webapp-votre_nom-{remplacez_par_votre_nom}-${random_integer.example.result}"
+  name                = "webapp-Kyllian-alicia-{Kyllian-alicia}-${random_integer.example.result}"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
   app_service_plan_id = azurerm_app_service_plan.example.id
